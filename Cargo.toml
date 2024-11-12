@@ -1,0 +1,16 @@
+[package]
+name = "rs-minesweeper"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+macroquad = "0.4"
+rand = "0.8.5"
+
+[[bin]]
+name = "rs-minesweeper"
+path = "src/main.rs"
+
+[[example]]
+name = "snake"
+path = "examples/snake.rs"
