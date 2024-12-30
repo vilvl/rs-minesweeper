@@ -1,0 +1,38 @@
+{
+	"name": "rs-minesweeper",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"runArgs": [
+		"-e", "DISPLAY=:99",
+		"-e", "LIBGL_ALWAYS_SOFTWARE=1",
+		"-e", "MESA_GL_VERSION_OVERRIDE=3.3",
+		"-e", "__GLX_VENDOR_LIBRARY_NAME=mesa",
+		"-e", "LIBGL_ALWAYS_INDIRECT=1"
+	],
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"terminal.integrated.shell.linux": "/bin/zsh",
+				"rust-analyzer.checkOnSave.command": "clippy",
+				"rust-analyzer.cargo.features": "all"
+			},
+			"extensions": [
+				"eamodio.gitlens",
+				"github.copilot",
+				"ms-azuretools.vscode-docker",
+				"Gruntfuggly.todo-tree",
+				"vadimcn.vscode-lldb"
+			]
+		}
+	},
+	"mounts": [
+		"source=${env:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached,readonly",
+		"source=${env:HOME}/.gitconfig,target=/root/.gitconfig,type=bind,consistency=cached,readonly",
+		"source=${env:HOME}/.zshrc,target=/root/.zshrc,type=bind,consistency=cached",
+		"source=${env:HOME}/.some_alias,target=/root/.some_alias,type=bind,consistency=cached"
+	],
+	"workspaceFolder": "/workspace",
+	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+	"remoteUser": "root"
+}
