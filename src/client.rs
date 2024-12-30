@@ -75,6 +75,7 @@ struct RectClientField {
 }
 
 const SQ_SIZE: f32 = 30.;
+const GRID_LINE_THICKNESS: f32 = 1.0;
 
 impl RectClientField {
     fn new(heigth: usize, width: usize, mines_cnt: usize) -> Self {
@@ -208,6 +209,30 @@ impl TClientField for RectClientField {
                     _ => {}
                 }
             }
+        }
+
+        // Draw vertical lines
+        for col in 0..=self.width {
+            draw_line(
+                col as f32 * SQ_SIZE,
+                0.0,
+                col as f32 * SQ_SIZE,
+                self.heigth as f32 * SQ_SIZE,
+                GRID_LINE_THICKNESS,
+                GRAY,
+            );
+        }
+
+        // Draw horizontal grid lines
+        for row in 0..=self.heigth {
+            draw_line(
+                0.0,
+                row as f32 * SQ_SIZE,
+                self.width as f32 * SQ_SIZE,
+                row as f32 * SQ_SIZE,
+                GRID_LINE_THICKNESS,
+                GRAY,
+            );
         }
     }
 
