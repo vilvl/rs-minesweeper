@@ -114,9 +114,13 @@ impl TClientField for RectClientField {
             }
         } else if is_mouse_button_released(MouseButton::Left) {
             if !is_mouse_button_down(MouseButton::Right) {
-                Some(vec![Coords::RectCoords { row, col }]) // todo: add neighbours
+                if self.rows[row][col] == VisibleCellState::Closed {
+                    Some(vec![Coords::RectCoords { row, col }]) // todo: add neighbours
+                } else {
+                    None
+                }
             } else {
-                if (self.rows[row][col] == VisibleCellState::Closed) {
+                if self.rows[row][col] == VisibleCellState::Closed {
                     Some(vec![Coords::RectCoords { row, col }])
                 } else {
                     None
@@ -187,6 +191,15 @@ impl TClientField for RectClientField {
                                 DARKGRAY,
                             );
                         }
+                    }
+                    VisibleCellState::Marked => {
+                        draw_rectangle(
+                            col as f32 * SQ_SIZE,
+                            row as f32 * SQ_SIZE,
+                            SQ_SIZE,
+                            SQ_SIZE,
+                            YELLOW,
+                        );
                     }
                     VisibleCellState::Empty(0) => {
                         draw_rectangle(
