@@ -1,43 +1,28 @@
-FROM mcr.microsoft.com/devcontainers/rust:latest
+FROM rust:1.83
 
-# 安装依赖
+# Install GUI libraries (adjust based on your GUI framework)
 RUN apt-get update && apt-get install -y \
+    libgtk-3-dev \
     libx11-dev \
-    libxi6 \
-    libxi-dev \
-    libxcursor-dev \
+    libxcb1-dev \
     libxrandr-dev \
-    libxinerama-dev \
-    libgl1-mesa-dev \
-    libgl1-mesa-glx \
-    libglu1-mesa-dev \
-    libxkbcommon0 \
-    libxkbcommon-x11-0 \
-    x11-xserver-utils \
-    mesa-utils \
-    xvfb \
-    pkg-config \
-    libglx-mesa0 \
-    libgl1 \
-    libglvnd0 \
-    libglx0 \
-    libegl1 \
-    libgles2 \
-    mesa-utils-extra
+    libxi-dev \
+    libxext-dev \
+    libxrender-dev \
+    zsh \
+    && apt-get clean
 
-RUN mkdir -p /usr/share/glvnd/egl_vendor.d && \
-    echo '{"file_format_version": "1.0.0", "ICD": {"library_path": "libEGL_mesa.so.0"}}' > /usr/share/glvnd/egl_vendor.d/50_mesa.json
+# Create a non-root user for development
+RUN useradd -m vscode \
+    && usermod -aG sudo vscode
 
-RUN echo '#!/bin/bash\n\
-export LIBGL_ALWAYS_SOFTWARE=1\n\
-export MESA_GL_VERSION_OVERRIDE=3.0\n\
-export GALLIUM_DRIVER=llvmpipe\n\
-Xvfb :99 -screen 0 1024x768x24 -ac +extension GLX +render -noreset &\n\
-sleep 2\n\
-exec "$@"' > /usr/local/bin/start-xvfb.sh \
-    && chmod +x /usr/local/bin/start-xvfb.sh
+# Switch to the new user
+USER vscode
 
-ENV DISPLAY=:99
-ENV LIBGL_ALWAYS_SOFTWARE=1
-ENV MESA_GL_VERSION_OVERRIDE=3.0
-ENV GALLIUM_DRIVER=llvmpipe
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+# Set up Rust environment
+ENV PATH="/home/vscode/.cargo/bin:${PATH}"
+
+# Set working directory
+WORKDIR /workspaces/rs-minesweeper
