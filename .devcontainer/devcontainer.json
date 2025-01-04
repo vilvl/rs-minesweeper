@@ -1,0 +1,37 @@
+{
+	"name": "rs-minesweeper",
+	"build": {
+	  "dockerfile": "Dockerfile"
+	},
+	"customizations": {
+	  "vscode": {
+		"settings": {
+			"terminal.integrated.shell.linux": "/bin/zsh",
+			"rust-analyzer.checkOnSave.command": "clippy",
+			"rust-analyzer.cargo.features": "all"
+		},
+		"extensions": [
+		  "rust-lang.rust-analyzer",
+		  "maattdd.gitless",
+		  "Gruntfuggly.todo-tree"
+		]
+	  }
+	},
+	"mounts": [
+	  "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind",
+	  "source=${env:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached,readonly"
+	],
+	"remoteUser": "vscode",
+	"features": {
+	  "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+	},
+	"containerEnv": {
+	  "DISPLAY": "${localEnv:DISPLAY}"
+	},
+	"runArgs": [
+	  "--network",
+	  "host",
+	  "--env",
+	  "DISPLAY=${localEnv:DISPLAY}"
+	]
+  }
